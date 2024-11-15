@@ -61,15 +61,24 @@ function SpiceConn(o)
     if (o.parent !== undefined)
     {
         this.parent = o.parent;
-        this.message_id = o.parent.message_id;
+        if (o.parent.message_id !== undefined)
+            this.message_dom = document.getElementById(o.parent.message_id);
+        else
+            this.message_dom = o.parent.message_dom;
         this.password = o.parent.password;
     }
     if (o.screen_id !== undefined)
-        this.screen_id = o.screen_id;
+        this.screen_dom = document.getElementById(o.screen_id);
+    if (o.screen_dom !== undefined)
+        this.screen_dom = o.screen_dom;
     if (o.dump_id !== undefined)
-        this.dump_id = o.dump_id;
+        this.dump_dom = document.getElementById(o.dump_id);
+    if (o.dump_dom !== undefined)
+        this.dump_dom = o.dump_dom;
     if (o.message_id !== undefined)
-        this.message_id = o.message_id;
+        this.message_dom = document.getElementById(o.message_id);
+    if (o.message_dom !== undefined)
+        this.message_dom = o.message_dom;
     if (o.password !== undefined)
         this.password = o.password;
     if (o.onerror !== undefined)
@@ -433,12 +442,12 @@ SpiceConn.prototype =
     {
         var msg = Array.prototype.join.call(arguments, " ");
         console.log(msg);
-        if (this.message_id)
+        if (this.message_dom)
         {
             var p = document.createElement("p");
             p.appendChild(document.createTextNode(msg));
             p.className += "spice-message-info";
-            document.getElementById(this.message_id).appendChild(p);
+            this.message_dom.appendChild(p);
         }
     },
 
@@ -446,12 +455,12 @@ SpiceConn.prototype =
     {
         var msg = Array.prototype.join.call(arguments, " ");
         console.log("WARNING: " + msg);
-        if (this.message_id)
+        if (this.message_dom)
         {
             var p = document.createElement("p");
             p.appendChild(document.createTextNode(msg));
             p.className += "spice-message-warning";
-            document.getElementById(this.message_id).appendChild(p);
+            this.message_dom.appendChild(p);
         }
     },
 
@@ -459,12 +468,12 @@ SpiceConn.prototype =
     {
         var msg = Array.prototype.join.call(arguments, " ");
         console.log("ERROR: " + msg);
-        if (this.message_id)
+        if (this.message_dom)
         {
             var p = document.createElement("p");
             p.appendChild(document.createTextNode(msg));
             p.className += "spice-message-error";
-            document.getElementById(this.message_id).appendChild(p);
+            this.message_dom.appendChild(p);
         }
     },
 

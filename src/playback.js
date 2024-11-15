@@ -80,7 +80,7 @@ SpicePlaybackConn.prototype.process_channel_message = function(msg)
             this.audio.spiceconn = this;
             this.audio.setAttribute('autoplay', true);
             this.audio.src = window.URL.createObjectURL(this.media_source);
-            document.getElementById(this.parent.screen_id).appendChild(this.audio);
+            this.parent.screen_dom.appendChild(this.audio);
 
             this.media_source.addEventListener('sourceopen', handle_source_open, false);
             this.media_source.addEventListener('sourceended', handle_source_ended, false);
@@ -168,7 +168,7 @@ SpicePlaybackConn.prototype.process_channel_message = function(msg)
         Utils.PLAYBACK_DEBUG > 0 && console.log("PlaybackStop");
         if (this.source_buffer)
         {
-            document.getElementById(this.parent.screen_id).removeChild(this.audio);
+            this.parent.screen_dom.removeChild(this.audio);
             window.URL.revokeObjectURL(this.audio.src);
 
             delete this.source_buffer;

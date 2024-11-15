@@ -353,7 +353,7 @@ SpiceDisplayConn.prototype.process_channel_message = function(msg)
                 draw_fill.base.box.right - draw_fill.base.box.left,
                 draw_fill.base.box.bottom - draw_fill.base.box.top);
 
-            if (Utils.DUMP_DRAWS && this.parent.dump_id)
+            if (Utils.DUMP_DRAWS && this.parent.dump_dom)
             {
                 var debug_canvas = document.createElement("canvas");
                 debug_canvas.setAttribute('width', this.surfaces[draw_fill.base.surface_id].canvas.width);
@@ -364,7 +364,7 @@ SpiceDisplayConn.prototype.process_channel_message = function(msg)
                     draw_fill.base.box.left, draw_fill.base.box.top,
                     draw_fill.base.box.right - draw_fill.base.box.left,
                     draw_fill.base.box.bottom - draw_fill.base.box.top);
-                document.getElementById(this.parent.dump_id).appendChild(debug_canvas);
+                this.parent.dump_dom.appendChild(debug_canvas);
             }
 
             this.surfaces[draw_fill.base.surface_id].draw_count++;
@@ -452,14 +452,14 @@ SpiceDisplayConn.prototype.process_channel_message = function(msg)
         //source_context.putImageData(source_img, copy_bits.base.box.left, copy_bits.base.box.top);
         putImageDataWithAlpha(source_context, source_img, copy_bits.base.box.left, copy_bits.base.box.top);
 
-        if (Utils.DUMP_DRAWS && this.parent.dump_id)
+        if (Utils.DUMP_DRAWS && this.parent.dump_dom)
         {
             var debug_canvas = document.createElement("canvas");
             debug_canvas.setAttribute('width', width);
             debug_canvas.setAttribute('height', height);
             debug_canvas.setAttribute('id', "copybits" + copy_bits.base.surface_id + "." + this.surfaces[copy_bits.base.surface_id].draw_count);
             debug_canvas.getContext("2d").putImageData(source_img, 0, 0);
-            document.getElementById(this.parent.dump_id).appendChild(debug_canvas);
+            this.parent.dump_dom.appendChild(debug_canvas);
         }
 
 
@@ -509,8 +509,8 @@ SpiceDisplayConn.prototype.process_channel_message = function(msg)
         canvas.setAttribute('tabindex', m.surface.surface_id);
         canvas.context = canvas.getContext("2d");
 
-        if (Utils.DUMP_CANVASES && this.parent.dump_id)
-            document.getElementById(this.parent.dump_id).appendChild(canvas);
+        if (Utils.DUMP_CANVASES && this.parent.dump_dom)
+            this.parent.dump_dom.appendChild(canvas);
 
         m.surface.canvas = canvas;
         m.surface.draw_count = 0;
@@ -522,10 +522,10 @@ SpiceDisplayConn.prototype.process_channel_message = function(msg)
 
             /* This .save() is done entirely to enable SPICE_MSG_DISPLAY_RESET */
             canvas.context.save();
-            document.getElementById(this.parent.screen_id).appendChild(canvas);
+            this.parent.screen_dom.appendChild(canvas);
 
             /* We're going to leave width dynamic, but correctly set the height */
-            document.getElementById(this.parent.screen_id).style.height = m.surface.height + "px";
+            this.parent.screen_dom.style.height = m.surface.height + "px";
             this.hook_events();
         }
         return true;
@@ -571,7 +571,7 @@ SpiceDisplayConn.prototype.process_channel_message = function(msg)
                 left += this.surfaces[m.surface_id].canvas.offsetLeft;
                 top += this.surfaces[m.surface_id].canvas.offsetTop;
             }
-            document.getElementById(this.parent.screen_id).appendChild(v);
+            this.parent.screen_dom.appendChild(v);
             v.setAttribute('style', "pointer-events:none; position: absolute; top:" + top + "px; left:" + left + "px;");
 
             media.addEventListener('sourceopen', handle_video_source_open, false);
@@ -653,7 +653,7 @@ SpiceDisplayConn.prototype.process_channel_message = function(msg)
 
         if (this.streams[m.id].codec_type == Constants.SPICE_VIDEO_CODEC_TYPE_VP8)
         {
-            document.getElementById(this.parent.screen_id).removeChild(this.streams[m.id].video);
+            this.parent.screen_dom.removeChild(this.streams[m.id].video);
             this.streams[m.id].source_buffer = null;
             this.streams[m.id].media = null;
             this.streams[m.id].video = null;
@@ -697,13 +697,13 @@ SpiceDisplayConn.prototype.process_channel_message = function(msg)
 SpiceDisplayConn.prototype.delete_surface = function(surface_id)
 {
     var canvas = document.getElementById("spice_surface_" + surface_id);
-    if (Utils.DUMP_CANVASES && this.parent.dump_id)
-        document.getElementById(this.parent.dump_id).removeChild(canvas);
+    if (Utils.DUMP_CANVASES && this.parent.dump_dom)
+        this.parent.dump_dom.removeChild(canvas);
     if (this.primary_surface == surface_id)
     {
         this.unhook_events();
         this.primary_surface = undefined;
-        document.getElementById(this.parent.screen_id).removeChild(canvas);
+        this.parent.screen_dom.removeChild(canvas);
     }
 
     delete this.surfaces[surface_id];
@@ -742,7 +742,7 @@ SpiceDisplayConn.prototype.draw_copy_helper = function(o)
         this.cache[o.descriptor.id] = o.image_data;
     }
 
-    if (Utils.DUMP_DRAWS && this.parent.dump_id)
+    if (Utils.DUMP_DRAWS && this.parent.dump_dom)
     {
         var debug_canvas = document.createElement("canvas");
         debug_canvas.setAttribute('width', o.image_data.width);
@@ -751,7 +751,7 @@ SpiceDisplayConn.prototype.draw_copy_helper = function(o)
             this.surfaces[o.base.surface_id].draw_count + "." +
             o.base.surface_id + "@" + o.base.box.left + "x" +  o.base.box.top);
         debug_canvas.getContext("2d").putImageData(o.image_data, 0, 0);
-        document.getElementById(this.parent.dump_id).appendChild(debug_canvas);
+        this.parent.dump_dom.appendChild(debug_canvas);
     }
 
     this.surfaces[o.base.surface_id].draw_count++;
@@ -970,14 +970,14 @@ function handle_draw_jpeg_onload()
 
     if (temp_canvas == null)
     {
-        if (Utils.DUMP_DRAWS && this.o.sc.parent.dump_id)
+        if (Utils.DUMP_DRAWS && this.o.sc.parent.dump_dom)
         {
             var debug_canvas = document.createElement("canvas");
             debug_canvas.setAttribute('id', this.o.tag + "." +
                 this.o.sc.surfaces[this.o.base.surface_id].draw_count + "." +
                 this.o.base.surface_id + "@" + this.o.base.box.left + "x" +  this.o.base.box.top);
             debug_canvas.getContext("2d").drawImage(this, 0, 0);
-            document.getElementById(this.o.sc.parent.dump_id).appendChild(debug_canvas);
+            this.o.sc.parent.dump_dom.appendChild(debug_canvas);
         }
 
         this.o.sc.surfaces[this.o.base.surface_id].draw_count++;

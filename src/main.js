@@ -44,12 +44,18 @@ import { resize_helper, handle_resize } from './resize.js';
 **                                  where SpiceConn will write messages.
 **                                  It will use classes spice-messages-x,
 **                                  where x is one of info, warning, or error.
+**          message_dom (optional)  Element in the dom corresponding to the
+**                                  previous option
 **          screen_id   (optional)  Identifier of an element in the DOM
 **                                  where SpiceConn will create any new
 **                                  client screens.  This is the main UI.
+**          screen_dom  (optional)  Element in the dom corresponding to the
+**                                  previous option
 **          dump_id     (optional)  If given, an element to use for
 **                                  dumping every single image + canvas drawn.
 **                                  Sometimes useful for debugging.
+**          dump_dom    (optional)  Element in the dom corresponding to the
+**                                  previous option
 **          onerror     (optional)  If given, a function to receive async
 **                                  errors.  Note that you should also catch
 **                                  errors for ones that occur inline

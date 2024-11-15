@@ -32,8 +32,8 @@
 **--------------------------------------------------------------------------*/
 function resize_helper(sc)
 {
-    var w = document.getElementById(sc.screen_id).clientWidth;
-    var m = document.getElementById(sc.message_id);
+    var w = sc.screen_dom.clientWidth;
+    var m = sc.message_dom;
 
     /* Resize vertically; basically we leave a 20 pixel margin
          at the bottom, and use the position of the message window

@@ -64,7 +64,7 @@ SpiceCursorConn.prototype.process_channel_message = function(msg)
         DEBUG > 1 && console.log("SpiceMsgCursorSet");
         if (cursor_set.flags & Constants.SPICE_CURSOR_FLAGS_NONE)
         {
-            document.getElementById(this.parent.screen_id).style.cursor = "none";
+            this.parent.screen_dom.style.cursor = "none";
             return true;
         }
 
@@ -91,7 +91,7 @@ SpiceCursorConn.prototype.process_channel_message = function(msg)
     if (msg.type == Constants.SPICE_MSG_CURSOR_HIDE)
     {
         DEBUG > 1 && console.log("SpiceMsgCursorHide");
-        document.getElementById(this.parent.screen_id).style.cursor = "none";
+        this.parent.screen_dom.style.cursor = "none";
         return true;
     }
 
@@ -104,7 +104,7 @@ SpiceCursorConn.prototype.process_channel_message = function(msg)
     if (msg.type == Constants.SPICE_MSG_CURSOR_RESET)
     {
         DEBUG > 1 && console.log("SpiceMsgCursorReset");
-        document.getElementById(this.parent.screen_id).style.cursor = "auto";
+        this.parent.screen_dom.style.cursor = "auto";
         return true;
     }
 
@@ -129,7 +129,7 @@ SpiceCursorConn.prototype.set_cursor = function(cursor)
     var pngstr = create_rgba_png(cursor.header.width, cursor.header.height, cursor.data);
     var curstr = 'url(data:image/png,' + pngstr + ') ' +
         cursor.header.hot_spot_x + ' ' + cursor.header.hot_spot_y + ", default";
-    var screen = document.getElementById(this.parent.screen_id);
+    var screen = this.parent.screen_dom;
     screen.style.cursor = 'auto';
     screen.style.cursor = curstr;
     if (window.getComputedStyle(screen, null).cursor == 'auto')

@@ -79,7 +79,7 @@ simulate_cursor: function (spicecursor, cursor, screen, pngstr)
             SpiceSimulateCursor.create_icondir(cursor.header.width, cursor.header.height,
             cursor.data.byteLength, cursor.header.hot_spot_x, cursor.header.hot_spot_y) + pngstr);
 
-        document.getElementById(spicecursor.parent.screen_id).style.cursor = 'none';
+        spicecursor.parent.screen_dom.style.cursor = 'none';
         if (! spicecursor.spice_simulated_cursor)
         {
             spicecursor.spice_simulated_cursor = document.createElement('img');
@@ -88,7 +88,7 @@ simulate_cursor: function (spicecursor, cursor, screen, pngstr)
             spicecursor.spice_simulated_cursor.style.display = 'none';
             spicecursor.spice_simulated_cursor.style.overflow = 'hidden';
 
-            spicecursor.spice_simulated_cursor.spice_screen = document.getElementById(spicecursor.parent.screen_id);
+            spicecursor.spice_simulated_cursor.spice_screen = spicecursor.parent.screen_dom;
 
             spicecursor.spice_simulated_cursor.addEventListener('mousemove', SpiceSimulateCursor.handle_sim_mousemove);
 
