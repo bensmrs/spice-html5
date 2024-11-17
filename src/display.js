@@ -696,7 +696,7 @@ SpiceDisplayConn.prototype.process_channel_message = function(msg)
 
 SpiceDisplayConn.prototype.delete_surface = function(surface_id)
 {
-    var canvas = document.getElementById("spice_surface_" + surface_id);
+    var canvas = this.parent.screen_dom.getRootNode().getElementById("spice_surface_" + surface_id);
     if (Utils.DUMP_CANVASES && this.parent.dump_dom)
         this.parent.dump_dom.removeChild(canvas);
     if (this.primary_surface == surface_id)
